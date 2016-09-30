@@ -3,6 +3,7 @@
 var syn = require('syn');
 
 var SearchBarController = require('../../controllers/search-bar-controller');
+var unroll = require('../util').unroll;
 
 function center(element) {
   let rect = element.getBoundingClientRect();
@@ -27,7 +28,9 @@ describe('SearchBarController', function () {
 
   before(function () {
     template = '<form>' +
+      '<div class="search-bar__lozenges" data-ref="searchBarLozenges"></div>' +
       '<input data-ref="searchBarInput">' +
+      '<input data-ref="searchBarInputHidden">' +
       '<div data-ref="searchBarDropdown">' +
       '<div>Narrow your search</div>' +
       '<ul>' +
@@ -247,5 +250,15 @@ describe('SearchBarController', function () {
         assert.isFalse(submitted);
         done();
       });
+  });
+
+  it('should create a lozenge when the user presses space', function (done) {
+    syn
+      .click(input)
+      .type('foo')
+      .type('[space]', () => {
+        assert.equal(testEl.querySelector('.lozenge-content').textContent, 'foo');
+        done();
+    });
   });
 });
